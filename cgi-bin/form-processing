@@ -30,12 +30,25 @@ sub sanitise {
 ############
 
 use CGI qw(:standard);
+use Log::Log4perl;
 use YAML::XS qw(LoadFile);                  # for the config
 use Email::Sender::Transport::SMTP::TLS;    # for the transport
 use Email::Stuffer;                         # for the email
 
-# open the log file
-#open my $fh, '>>', '/var/www/logs/contacts.log' or die $!;
+
+# set up the log file
+my $conf = q(
+  log4perl.rootLogger = INFO, Syslog
+  log4perl.appender.Syslog = Log::Dispatch::Syslog
+  log4perl.appender.Syslog.ident = form-processing
+  log4perl.appender.Syslog.facility = local0
+  log4perl.appender.Syslog.layout = SimpleLayout
+);
+
+Log::Log4perl::init(\$conf);
+my $logger = Log::Log4perl->get_logger();
+
+$logger->info("Form handler started");
 
 ### FIXME
 # the log file needs locking for thread safety
@@ -55,13 +68,16 @@ my (
 my $timestamp = sprintf("%02d:%02d:%02d %02d-%02d-%04d", 
   $HOUR+1, $MIN, $SEC, $DAY, $MONTH+1, $YEAR+1900);
 
+$logger->info("form-processing running at: $timestamp");
+
+
 # use cgi module to extract the info from the submitted form
 my $q = CGI->new;	                    # q for query
 
 my $err = $q->cgi_error;              # check for errors
 
 if ($err) {
-	#print $fh "CGI error: $err";
+  $logger->error("CGI error: $err");
 }
 
 ### FIXME need better sanitisation
@@ -84,8 +100,7 @@ message content:
 $q_message
 EOF
 
-#print $fh $log_text;
-#close $fh;
+$logger->info("$log_text");
 
 #################
 # send the mail #

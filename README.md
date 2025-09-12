@@ -4,6 +4,13 @@
 
 copy primary directory (with index.html &c) to `/var/www` or whatever.
 
+## deployment
+
+```
+sudo cp -r cgi-bin/ /var/www/cgi-bin
+sudo cp -r site/ /var/www/dino-test
+```
+
 ## cgi
 
 (create and) move perl script to `/var/www/cgi-bin/` and create `/var/www/cgi-bin/log/contacts.log`
@@ -53,6 +60,8 @@ To do this we need to recreate the caddy binary with a cgi plugin added.
 
 We do this using [xcaddy](https://github.com/caddyserver/xcaddy?tab=readme-ov-file)
 and [this plugin](https://github.com/aksdb/caddy-cgi).
+
+Note: will first need Go up and running.
 
 Read the docs. 
 
