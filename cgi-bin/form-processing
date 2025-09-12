@@ -1,0 +1,138 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+############
+# preamble #
+############
+
+use CGI qw(:standard);
+
+use YAML::XS qw(LoadFile);                  # for the config
+use Email::Sender::Transport::SMTP::TLS;    # for the transport
+use Email::Stuffer;                         # for the email
+
+# declarations
+
+my (
+	$SEC,
+	$MIN,
+	$HOUR,
+	$DAY,
+	$MONTH,
+	$YEAR,
+);
+
+# get timestamp
+
+($SEC, $MIN, $HOUR, $DAY, $MONTH, $YEAR) = (gmtime)[0,1,2,3,4,5];
+
+my $timestamp = sprintf("%02d:%02d:%02d %02d-%02d-%04d", $HOUR+1, $MIN, $SEC, $DAY, $MONTH+1, $YEAR+1900);
+
+# use cgi module to extract the info from the form
+
+my $q = CGI->new;	# q for query
+
+# check for errors
+#my $err = $q->cgi_error;
+
+#if ($err) {
+	# not actually this but something
+	#	print $q->header(-status=>$err);
+	#}
+
+### FIXME need secure sanitisation
+
+my $q_name     = $q->param('name')    || '';
+my $q_email    = $q->param('email')   || '';
+my $q_subject  = $q->param('subject') || '';
+my $q_message  = $q->param('message') || '';
+
+###################
+# log the message #
+###################
+
+my $log_text = <<EOF;
+$timestamp
+name: $q_name
+email address: $q_email
+subject line: $q_subject
+message content:
+$q_message
+EOF
+
+open my $fh, '>>', '/var/www/cgi-bin/log/contacts.log' or die $!;
+print $fh $log_text;
+close $fh;
+
+#################
+# send the mail #
+#################
+
+### FIXME
+# dont bother with the config file
+# but loaded it all from the environment
+### TODO
+# create a .env file, and load it
+
+my $config = LoadFile('/var/www/cgi-bin/config.yaml');
+
+### mail ###
+
+my $mail_conf = $config->{mail};
+my $send_from = $mail_conf->{send_from};
+my $send_to   = $mail_conf->{send_to};
+
+### server ###
+
+my $smtp_conf = $config->{smtp};
+my $server = $smtp_conf->{host};
+my $port = $smtp_conf->{port};
+
+### auth ###
+
+my $starttls_conf = $config->{starttls};
+my $user = $starttls_conf->{user};
+my $pw = $starttls_conf->{pw};
+
+my $transport = Email::Sender::Transport::SMTP::TLS->new({
+    host     => $server,
+    port     => $port,
+    username => $user,
+    password => $pw,
+    timeout  => 20,
+});
+
+my $subject = "Message from [$q_name]: $q_subject"; ### FIXME
+
+my $email_text = <<EOF;
+The following form was submitted at $timestamp.
+FROM:
+$q_name
+EMAIL:
+$q_email
+SUBJECT:
+$q_subject
+MESSAGE:
+$q_message
+EOF
+
+my $email = Email::Stuffer->from($send_from)
+                          ->to($send_to)
+                          ->subject($subject)
+                          ->text_body($email_text)
+                          ->transport($transport);
+
+$email->send_or_die;
+
+#####################
+# respond to client #
+#####################
+
+print $q->header('application/json');
+
+print qq({
+  "status": "success",
+  "message": "thanks $q_name, your message has been sent."
+});

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deserunt temporibus</title>
+    <link rel="stylesheet" href="resources/styles/reset.css">
+    <link rel="stylesheet" href="resources/styles/styles.css">
+</head>
+<body>
+    <header>
+        <a href="#about">
+            <h1>deserunt temporibus</h1>
+            <h2 class="subtitle">consequatur eos rerum</h2>
+        </a>
+        <nav>
+            <ul>
+                <li class="nav-item"><button class="active" data-target="about">
+                    about
+                </button></li>
+                <li class="nav-item"><button  data-target="works">
+                    works
+                </button></li>
+                <li class="nav-item"><button  data-target="contact">
+                    contact
+                </button></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+
+        <section class="about" id="about">
+            <div class="hero-image" title="hero-image">
+                <div class="hero-text">
+                    <h3>about</h3>
+                </div>
+            </div>
+
+            <div class="content">
+                <p>Porro et quaerat aut non. Nam voluptates eos nihil dolores quia et. Perspiciatis sit explicabo iste voluptas velit fugiat. Consequatur deserunt temporibus provident.Sint odio doloremque voluptatem illum dolores qui. Vitae quo in dolorem nulla in quia dolor aut. Aut praesentium consequatur eos rerum voluptatem iure eligendi et. Excepturi doloribus alias atque rerum consectetur odit ut. Nihil praesentium commodi labore quas aliquam.</p>
+
+                <p>Doloremque aliquam aut ut quo. Dignissimos magni possimus magni. Harum ex voluptas voluptates recusandae. Quis voluptates ab iusto sit nesciunt molestias et possimus. Rerum aut doloribus inventore tempora illo voluptatem porro. Beatae et omnis autem. Pariatur praesentium qui dolor ad. Quo incidunt quaerat cupiditate sit ea libero debitis odit. Sequi culpa voluptas reiciendis veritatis distinctio modi aliquid. Qui nisi est qui iste alias esse corrupti asperiores. Ea fugit sint sint.</p>
+
+                <p>Distinctio repellendus occaecati sed quod rerum vel amet dolores. Omnis distinctio quisquam sunt praesentium omnis. Dignissimos placeat dignissimos maxime aliquam ut distinctio. Est hic ea magnam magnam. Assumenda atque totam accusamus consequatur voluptates voluptatem. Mollitia impedit et quia aut impedit recusandae.</p>
+            </div>
+        </section>
+
+        <section id="works" class="works hidden">
+             <div class="hero-image" title="hero-image">
+                <div class="hero-text">
+                    <h3>works</h3>
+                </div>
+            </div>
+            <!-- deck of images linking to seperate page per work ? -->
+
+            <div class="content">
+                <ul class="deck">
+                    <li class="card">
+                        <a href="pages/work-1.html">
+                        <img src="media/works/work-1/00007-192575264.png" alt="something">
+                        <div class="container">
+                            <h4>work a</h4>
+                            <p>In minima ipsam sit dignissimos quia veritatis dolorem. Laborum sapiente illo vitae esse delectus ea aliquid laboriosam. Nihil eligendi blanditiis voluptas.</p>
+                        </div>
+                        </a>
+                    </li>
+                    <li class="card">
+                        <a href="pages/work-2.html">
+                        <img src="media/works/work-2/00011-2984591768.png" alt="something">
+                        <div class="container">
+                            <h4>work b</h4>
+                            <p>Eos optio dolorum dolore eveniet. Rem sunt illo eveniet ut dolor. Ut et consectetur quae animi dolore et. Et quaerat facere voluptates. Et magnam porro similique omnis aperiam id. Nisi eaque commodi est sunt dolor.</p>
+                        </div>
+                        </a>
+                    </li>
+                    <li class="card">
+                        <a href="pages/work-3.html">
+                        <img src="media/works/work-3/00015-1281021610.png" alt="something">
+                        <div class="container">
+                            <h4>work c</h4>
+                            <p>Eum quia sed porro numquam repellat et nostrum. Esse veritatis doloremque ut qui. Occaecati a accusantium neque ab. Et vitae corporis explicabo iusto.</p>
+                        </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="contact" class="contact hidden">
+            <div class="content">
+                <form action="/cgi-bin/form-processing" method="post">
+                    <fieldset>
+                        <label for="name">name:</label>
+                        <input type="text" id="name" name="name" required>
+                        <label for="email">email:</label>
+                        <input type="email" id="email" name="email" required>
+                        <label for="subject">subject:</label>
+                        <input type="text" id="subject" name="subject" required minlength="1" maxlength="200">
+                        <label for="message">message:</label>
+                        <textarea id="message" name="message" rows="8" cols="50" required minlength="1" maxlength="1000"></textarea>
+                        <input type="submit" value="submit">
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+    </main>
+    <footer><small>
+        © 2025. all rights reserved.
+    </small></footer>
+    <script src="resources/main.js"></script>
+    <script src="resources/form-feedback.js"></script>
+</body>
+</html>
