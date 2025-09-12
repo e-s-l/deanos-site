@@ -14,7 +14,6 @@ install the required perl modules...
 
 note that these have dependencies on the following system packages...
 
-
 ## permissions
 
 the cgi script should be exectuable but not writable (by anyone) *i.e* ...
@@ -45,3 +44,42 @@ journalctl -u caddy -f
 ```
 
 # future work
+
+# extra
+
+## notes on enabling cgi-bin with caddy
+
+To do this we need to recreate the caddy binary with a cgi plugin added.
+
+We do this using [xcaddy](https://github.com/caddyserver/xcaddy?tab=readme-ov-file)
+and [this plugin](https://github.com/aksdb/caddy-cgi).
+
+Read the docs. 
+
+Make sure to (back up and) replace the caddy binary in the bin folder with the newly generated one.
+
+Check the new functionality is now available by:
+```
+caddy list-modules | grep cgi
+```
+
+Then the caddy file section should look something like:
+```
+the-website.com {
+	root * /var/www/the-directory
+	file_server
+
+	log {
+		format console
+		output file /var/log/caddy/access.log {
+			roll_size 10MB              # New file when size exceeds 10MB
+			roll_keep 5                 # Keep at most 5 files
+		}
+	}
+
+	cgi /the-action-path /the-exec /var/www/cgi-bin/the-file {
+		pass_env PATH
+		# inspect                       # for development testing and debug
+	}
+}
+```

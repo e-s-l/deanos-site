@@ -102,6 +102,12 @@ nav ul {
   gap: 1rem;
 }
 
+.nav-item>a,
+.nav-item>button {
+  display: flex;
+  align-items: center;
+}
+
 ul li {
   float: left;
 }
@@ -351,7 +357,6 @@ input:valid, textarea:valid {
   border: 1px solid #e74c3c;
   color: #b71c1c;
 }
-
 
 /*******************/
 /*** hero images ***/

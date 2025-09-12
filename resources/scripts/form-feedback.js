@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       form.reset();
 
     } catch (err) {
-      feedback.textContent = "Sorry, something went wrong.";
+      feedback.textContent = "Something went wrong.";
       feedback.className = "feedback error show";
     }
 

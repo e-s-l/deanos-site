@@ -3,18 +3,44 @@
 use strict;
 use warnings;
 
+###################
+### subroutines ###
+###################
+
+### sanitise
+
+sub sanitise {
+  my $str = shift @_ || die("no argument supplied");
+
+  # escape html tags
+  $str =~ s/</&lt;/g;
+  $str =~ s/>/&gt;/g;
+
+  # strip newlines (and maybe carridge returns)
+  $str =~ s/\r?\n/ /g;
+
+  # remove null characters
+  $str =~ s/\0//g;
+
+  return $str;
+}
+
 ############
 # preamble #
 ############
 
 use CGI qw(:standard);
-
 use YAML::XS qw(LoadFile);                  # for the config
 use Email::Sender::Transport::SMTP::TLS;    # for the transport
 use Email::Stuffer;                         # for the email
 
-# declarations
+# open the log file
+open my $fh, '>>', '/var/www/cgi-bin/log/contacts.log' or die $!;
 
+### FIXME
+# the log file needs locking for thread safety
+
+# get timestamp
 my (
 	$SEC,
 	$MIN,
@@ -24,30 +50,26 @@ my (
 	$YEAR,
 );
 
-# get timestamp
-
 ($SEC, $MIN, $HOUR, $DAY, $MONTH, $YEAR) = (gmtime)[0,1,2,3,4,5];
 
-my $timestamp = sprintf("%02d:%02d:%02d %02d-%02d-%04d", $HOUR+1, $MIN, $SEC, $DAY, $MONTH+1, $YEAR+1900);
+my $timestamp = sprintf("%02d:%02d:%02d %02d-%02d-%04d", 
+  $HOUR+1, $MIN, $SEC, $DAY, $MONTH+1, $YEAR+1900);
 
-# use cgi module to extract the info from the form
+# use cgi module to extract the info from the submitted form
+my $q = CGI->new;	                    # q for query
 
-my $q = CGI->new;	# q for query
+my $err = $q->cgi_error;              # check for errors
 
-# check for errors
-#my $err = $q->cgi_error;
+if ($err) {
+  print $fh "CGI error: $err";
+}
 
-#if ($err) {
-	# not actually this but something
-	#	print $q->header(-status=>$err);
-	#}
+### FIXME need better sanitisation
 
-### FIXME need secure sanitisation
-
-my $q_name     = $q->param('name')    || '';
-my $q_email    = $q->param('email')   || '';
-my $q_subject  = $q->param('subject') || '';
-my $q_message  = $q->param('message') || '';
+my $q_name    = sanitise($q->param('name') || '');
+my $q_email   = sanitise($q->param('email') || '');
+my $q_subject = sanitise($q->param('subject') || '');
+my $q_message = sanitise($q->param('message') || '');
 
 ###################
 # log the message #
@@ -62,7 +84,6 @@ message content:
 $q_message
 EOF
 
-open my $fh, '>>', '/var/www/cgi-bin/log/contacts.log' or die $!;
 print $fh $log_text;
 close $fh;
 
@@ -77,6 +98,22 @@ close $fh;
 # create a .env file, and load it
 
 my $config = LoadFile('/var/www/cgi-bin/config.yaml');
+
+#
+# example config.yaml
+#
+#mail:
+#  send_from: email@email.com
+#  send_to: email@email.com
+#
+#smtp:
+#  host: smtp.gmail.com
+#  port: 587
+#
+#starttls:
+#  user: email@email.com
+#  pw: some app pass word
+#
 
 ### mail ###
 
