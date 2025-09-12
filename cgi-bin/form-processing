@@ -35,7 +35,7 @@ use Email::Sender::Transport::SMTP::TLS;    # for the transport
 use Email::Stuffer;                         # for the email
 
 # open the log file
-open my $fh, '>>', '/var/www/cgi-bin/log/contacts.log' or die $!;
+#open my $fh, '>>', '/var/www/logs/contacts.log' or die $!;
 
 ### FIXME
 # the log file needs locking for thread safety
@@ -61,7 +61,7 @@ my $q = CGI->new;	                    # q for query
 my $err = $q->cgi_error;              # check for errors
 
 if ($err) {
-  print $fh "CGI error: $err";
+	#print $fh "CGI error: $err";
 }
 
 ### FIXME need better sanitisation
@@ -84,8 +84,8 @@ message content:
 $q_message
 EOF
 
-print $fh $log_text;
-close $fh;
+#print $fh $log_text;
+#close $fh;
 
 #################
 # send the mail #
