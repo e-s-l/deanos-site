@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setTimeout(() => {
-      feedback.textContent = "";
+      // feedback.textContent = "";
       feedback.classList.remove("show");
     }, 3000);
 

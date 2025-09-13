@@ -11,6 +11,7 @@ use warnings;
 
 sub sanitise {
   my $str = shift @_ || die("no argument supplied");
+  # alternatively could just return empty string here
 
   # escape html tags
   $str =~ s/</&lt;/g;
@@ -71,7 +72,6 @@ $logger->info("form-processing running at: $timestamp");
 
 # use cgi module to extract the info from the submitted form
 my $q = CGI->new;	                    # q for query
-
 my $err = $q->cgi_error;              # check for errors
 
 if ($err) {
