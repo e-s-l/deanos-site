@@ -102,10 +102,14 @@ nav ul {
   gap: 1rem;
 }
 
-.nav-item>a,
-.nav-item>button {
-  display: flex;
+.nav-item > a,
+.nav-item > button {
+  display: inline-flex;
   align-items: center;
+  vertical-align: middle;
+  text-decoration: none;
+  font: inherit;
+
 }
 
 ul li {
