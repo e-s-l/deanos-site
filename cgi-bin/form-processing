@@ -48,8 +48,6 @@ my $conf = q(
 Log::Log4perl::init(\$conf);
 my $logger = Log::Log4perl->get_logger();
 
-$logger->info("Form handler started");
-
 ### FIXME
 # the log file needs locking for thread safety
 
@@ -86,6 +84,8 @@ my $q_name    = sanitise($q->param('name') || '');
 my $q_email   = sanitise($q->param('email') || '');
 my $q_subject = sanitise($q->param('subject') || '');
 my $q_message = sanitise($q->param('message') || '');
+### TODO: the empty string passed here cause death in the subroutine
+
 
 ###################
 # log the message #
